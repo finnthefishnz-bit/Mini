@@ -98,6 +98,22 @@ dialog li{gap:14px}
 #top .r{gap:12px}
 #top{padding:12px 16px}
 .chips{gap:10px}
+button.chip{background:none;cursor:pointer;color:var(--ink)}
+button.chip:hover{background:var(--hover)}
+input[type=checkbox]{width:auto;margin-right:8px;vertical-align:-2px}
+.dz{display:grid;gap:14px;margin-top:14px;max-width:420px}
+.dz img{width:100%;height:auto;border-radius:12px;border:1px solid var(--line);display:block}
+.dz .row{margin-top:0}
+.cb{margin:12px 0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--side);white-space:normal}
+.cbh{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:6px 12px;font-size:.8rem;color:var(--mute);border-bottom:1px solid var(--line)}
+.cbb{display:flex;gap:10px}
+.cbb button{padding:3px 10px;border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:.8rem}
+.cbb button:hover{background:var(--hover)}
+.cb pre{margin:0;padding:12px;overflow-x:auto;font:.85rem/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre}
+.cbo{border-top:1px solid var(--line);padding:10px 12px;font:.85rem/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.cbo pre{padding:0;white-space:pre-wrap}
+.cbf{width:100%;border:0;background:#fff;border-radius:6px;display:block}
+#mic.rec{color:#ef4444;background:var(--hover)}
 .thumb{max-width:240px;max-height:240px;border-radius:12px;display:block;margin-bottom:6px}#prevw{display:flex;gap:8px;align-items:center;padding:0 8px 8px}.pv{height:56px;border-radius:10px}
 @media(max-width:760px){#side{position:fixed;inset:0 auto 0 0;z-index:5;margin-left:-260px}#side.show{margin-left:0}}
 </style>
@@ -107,6 +123,7 @@ dialog li{gap:14px}
   <button class="item" id="new"><svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg>New chat</button>
   <button class="item" id="openTools"><svg viewBox="0 0 24 24"><path d="M9 11l3 3 8-8M20 12v7a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h9"/></svg>Timer, to-dos, notes</button>
   <button class="item" id="openTeach"><svg viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5zM7 11v5c0 1.5 2.2 3 5 3s5-1.5 5-3v-5"/></svg>Teach the AI</button>
+  <button class="item" id="openWeb"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/></svg>Web search</button>
   <button class="item" id="openKB"><svg viewBox="0 0 24 24"><path d="M4 6c0-1.7 3.6-3 8-3s8 1.3 8 3-3.6 3-8 3-8-1.3-8-3zM4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg>Knowledge base</button>
   <div class="label">Chats</div>
   <div id="chats"></div>
@@ -118,14 +135,14 @@ dialog li{gap:14px}
       <button class="ib" id="tog" aria-label="Toggle sidebar"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M9 4v16"/></svg></button>
       <span id="title">Pocket Chat</span>
     </div>
-    <div class="r"><select id="msel" aria-label="AI model"><option value="Qwen2.5-1.5B-Instruct-q4f16_1-MLC">Fast (1.5B, 1 GB)</option><option value="Qwen2.5-3B-Instruct-q4f16_1-MLC" selected>Smart (3B, 2 GB)</option><option value="Phi-3.5-mini-instruct-q4f16_1-MLC">Smarter (3.8B, 2.2 GB)</option><option value="Llama-3.1-8B-Instruct-q4f16_1-MLC">Smartest (8B, 5 GB)</option></select><button id="load">Load AI model</button></div>
+    <div class="r"><select id="msel" aria-label="AI model"><option value="Qwen2.5-1.5B-Instruct-q4f16_1-MLC">Fast (1.5B, 1 GB)</option><option value="Qwen2.5-3B-Instruct-q4f16_1-MLC" selected>Smart (3B, 2 GB)</option><option value="Qwen2.5-Coder-3B-Instruct-q4f16_1-MLC">Coder (3B, 2 GB)</option><option value="Phi-3.5-mini-instruct-q4f16_1-MLC">Smarter (3.8B, 2.2 GB)</option><option value="Llama-3.1-8B-Instruct-q4f16_1-MLC">Smartest (8B, 5 GB)</option></select><button id="load">Load AI model</button></div>
   </div>
   <div id="bar"></div>
   <div id="scroll"><div id="thread"></div></div>
   <div id="comp">
     <div id="prevw"></div>
     <div id="box">
-      <button class="ib" id="attach" aria-label="Attach image"><svg viewBox="0 0 24 24"><path d="M21 12l-8.5 8.5a5.5 5.5 0 01-7.8-7.8L13.5 4a3.7 3.7 0 015.2 5.2L10 18a1.8 1.8 0 01-2.6-2.6L15 8"/></svg></button><input type="file" id="file" accept="image/*" hidden>
+      <button class="ib" id="attach" aria-label="Attach image"><svg viewBox="0 0 24 24"><path d="M21 12l-8.5 8.5a5.5 5.5 0 01-7.8-7.8L13.5 4a3.7 3.7 0 015.2 5.2L10 18a1.8 1.8 0 01-2.6-2.6L15 8"/></svg></button><input type="file" id="file" accept="image/*" hidden><button class="ib" id="mic" aria-label="Speak instead of typing"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg></button>
       <textarea id="in" rows="1" placeholder="Ask anything, or say “open youtube and search lo-fi”"></textarea>
       <button id="send" aria-label="Send message" disabled><svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
     </div>
@@ -152,6 +169,22 @@ dialog li{gap:14px}
   <div class="row"><button class="btn o" data-close>Close</button></div>
 </dialog>
 
+<dialog id="dWeb">
+  <h2>Web search</h2>
+  <p class="mute" style="margin:0 0 4px">When it doesn’t know an answer it can look online. With no setup it searches Wikipedia and DuckDuckGo’s instant answers. For full web search, add a free Tavily key.</p>
+  <div class="grp">
+    <label class="mute"><input type="checkbox" id="wauto"> Search automatically when I ask a question it can’t answer</label>
+  </div>
+  <div class="grp">
+    <h3>Full web search (optional)</h3>
+    <input id="wkey" type="password" placeholder="Tavily API key (starts with tvly-)" autocomplete="off">
+    <p class="mute" style="margin:0">The key is saved only in this browser and is sent only to Tavily with each search. You can get a free key at tavily.com. Your questions go to the search services you use.</p>
+    <div class="row"><button class="btn" id="wsave">Save key</button><button class="btn o" id="wclear">Remove key</button></div>
+  </div>
+  <p class="mute" id="wmsg"></p>
+  <div class="row"><button class="btn o" data-close>Close</button></div>
+</dialog>
+
 <dialog id="dKB">
   <h2>Knowledge base</h2>
   <p class="mute" style="margin:0 0 4px">Teach it categories, phrases, replies and photos.</p>
@@ -162,12 +195,23 @@ dialog li{gap:14px}
     <p class="mute" style="margin:0">Patterns work too. (hi|hello|hey) [there|everyone] matches every combination. Use {name} to capture words, then write {name} in a reply.</p>
     <textarea id="kreplies" rows="3" placeholder="Replies, one per line. It picks one at random."></textarea>
     <label class="mute">Photos for this category<input id="kfiles" type="file" accept="image/*" multiple style="margin-top:6px"></label>
-    <div class="row"><button class="btn" id="ksave">Save category</button></div>
+    <div class="row"><button class="btn" id="ksave">Save category</button><button class="btn o" id="kfoldgo">Teach images from a folder</button></div>
+    <input id="kfold" type="file" webkitdirectory multiple hidden>
+    <p class="mute" style="margin:0">For a folder, each subfolder becomes a category and its pictures are learned. Thousands of pictures can take several minutes. Press Stop in the Wikipedia section to end early.</p>
   </div>
   <div class="grp">
     <h3>Import and export</h3>
     <div class="row"><button class="btn o" id="kimp">Import categories</button><button class="btn o" id="kdict">Import dictionary</button><button class="btn o" id="kexp">Export</button></div>
     <input id="kimpf" type="file" accept=".json,.jsonl,.txt" hidden><input id="kdictf" type="file" accept=".json,.jsonl,.tsv,.txt" hidden>
+  </div>
+  <div class="grp">
+    <h3>Learn from Wikipedia</h3>
+    <p class="mute" style="margin:0">Saves article summaries in your browser so it can answer from them, even offline. Anything you ask about is saved automatically too.</p>
+    <input id="wcat" placeholder="Wikipedia category, for example: Chemical elements">
+    <div class="row"><button class="btn o" id="wlcat">Learn category</button><button class="btn o" id="wlrnd">Learn 200 random articles</button><button class="btn o" id="wstop">Stop</button></div>
+    <div class="row" id="wsug"></div>
+    <textarea id="wtopics" rows="2" placeholder="Or list topics, one per line"></textarea>
+    <div class="row"><button class="btn o" id="wltop">Learn topics</button></div>
   </div>
   <div class="grp">
     <h3>Learn words from text</h3>
@@ -231,6 +275,7 @@ function runPlan(plan){
 /* ---------- built-in rules ---------- */
 function ruleParse(t){
   const low = t.trim().toLowerCase(), out = []; let m;
+  if((m = t.trim().match(/^when i say\s+["“]?(.+?)["”]?,?\s+(?:you\s+)?(?:say|reply|respond(?: with)?|answer)\s+["“]?(.+?)["”]?$/i))) return [{tool:'teach',say:m[1],reply:m[2]}];
   if((m = low.match(/^(?:open|go to|launch)\s+([a-z0-9.\-]+)(?:\s+and\s+search(?: for)?\s+(.+))?$/))){
     const n = m[1];
     if(SITES[n]) out.push({tool:'open_website',name:n}); else if(n.includes('.')) out.push({tool:'open_website',url:n});
@@ -250,7 +295,7 @@ function ruleParse(t){
 }
 
 /* ---------- model ---------- */
-const SYSTEM = `You are Pocket Chat, a friendly, accurate assistant that runs inside a web page. Chat normally and answer directly. Keep answers short unless the user asks for detail. Think carefully before answering maths or logic. If you are not sure, say so instead of guessing. Never invent facts, quotes or links.
+const SYSTEM = `You are Pocket Chat, a friendly, accurate assistant that runs inside a web page. Chat normally and answer directly. Keep answers short unless the user asks for detail. Think carefully before answering maths or logic. If you are not sure, say so instead of guessing. Never invent facts, quotes or links. When asked for code, give a one-line explanation and then ONE complete, runnable fenced code block that names its language (js, html or css), and never write an ACTION line for code.
 When the user wants you to open a site, search, add a to-do, save a note or set a timer, write one short sentence and then, on its own line, write ACTION: followed by a JSON array of tool calls.
 Tools:
 {"tool":"open_website","name":"youtube|gmail|maps|spotify|github|netflix|reddit|whatsapp|docs|calendar|drive"} or {"tool":"open_website","url":"https://..."}
@@ -289,15 +334,21 @@ $('#load').onclick = async () => {
 let pending = null;
 const nodes = new Map(), toks = new Map(), index = new Map(), byName = new Map(), imgs = [];
 const CANON = {hiya:'hello',heya:'hello',hullo:'hello',howdy:'hello',thx:'thanks',thanx:'thanks',thankyou:'thanks',ty:'thanks',pls:'please',plz:'please',u:'you',ur:'your',r:'are',im:"i'm",ive:"i've",whats:"what's",hows:"how's",thats:"that's",dont:"don't",cant:"can't",wont:"won't",isnt:"isn't",youre:"you're",gonna:'going',wanna:'want',gotta:'got',ok:'okay',yeah:'yes',yep:'yes',nope:'no',nah:'no'};
-const tok = s => (s.toLowerCase().match(/[\p{L}\p{N}']+/gu) || []).map(x=>CANON[x]||x);
+const tok = s => (s.toLowerCase().normalize('NFD').replace(/\p{M}/gu,'').replace(/’/g,"'").match(/[\p{L}\p{N}']+/gu) || []).map(x=>CANON[x]||x);
 const STOP = new Set('a an the is are am was do does did of to in on at and or for with about what how can could i me my you your it its this that please tell'.split(' '));
 const content = a => { const c = a.filter(x=>!STOP.has(x)); return c.length ? c : a; };
 const DB = {
-  open(){ return new Promise((ok,no)=>{ const r = indexedDB.open('pocketkb',2); r.onupgradeneeded = ()=>{ const db = r.result; if(!db.objectStoreNames.contains('n')) db.createObjectStore('n',{keyPath:'id'}); if(!db.objectStoreNames.contains('d')) db.createObjectStore('d',{keyPath:'w'}); }; r.onsuccess = ()=>{ this.db = r.result; ok(); }; r.onerror = ()=>no(r.error); }); },
+  open(){ return new Promise((ok,no)=>{ const r = indexedDB.open('pocketkb',4); r.onupgradeneeded = ()=>{ const db = r.result; if(!db.objectStoreNames.contains('n')) db.createObjectStore('n',{keyPath:'id'}); if(!db.objectStoreNames.contains('d')) db.createObjectStore('d',{keyPath:'w'}); if(!db.objectStoreNames.contains('w')) db.createObjectStore('w',{keyPath:'k'}); if(!db.objectStoreNames.contains('i')) db.createObjectStore('i',{autoIncrement:true}); }; r.onsuccess = ()=>{ this.db = r.result; ok(); }; r.onerror = ()=>no(r.error); }); },
   all(){ return new Promise(ok=>{ const q = this.db.transaction('n').objectStore('n').getAll(); q.onsuccess = ()=>ok(q.result); }); },
   put(a){ return new Promise(ok=>{ const t = this.db.transaction('n','readwrite'), st = t.objectStore('n'); a.forEach(n=>st.put(n)); t.oncomplete = ok; }); },
   putD(a){ return new Promise(ok=>{ const t = this.db.transaction('d','readwrite'), st = t.objectStore('d'); a.forEach(n=>st.put(n)); t.oncomplete = ok; }); },
   getD(w){ return new Promise(ok=>{ const q = this.db.transaction('d').objectStore('d').get(w); q.onsuccess = ()=>ok(q.result); q.onerror = ()=>ok(null); }); },
+  putW(a){ return new Promise(ok=>{ const t = this.db.transaction('w','readwrite'), st = t.objectStore('w'); a.forEach(n=>st.put(n)); t.oncomplete = ok; }); },
+  getW(k){ return new Promise(ok=>{ const q = this.db.transaction('w').objectStore('w').get(k); q.onsuccess = ()=>ok(q.result); q.onerror = ()=>ok(null); }); },
+  allW(){ return new Promise(ok=>{ const q = this.db.transaction('w').objectStore('w').getAll(); q.onsuccess = ()=>ok(q.result); q.onerror = ()=>ok([]); }); },
+  putI(a){ return new Promise(ok=>{ const t = this.db.transaction('i','readwrite'), st = t.objectStore('i'); a.forEach(n=>st.add(n)); t.oncomplete = ok; }); },
+  allI(){ return new Promise(ok=>{ const q = this.db.transaction('i').objectStore('i').getAll(); q.onsuccess = ()=>ok(q.result); q.onerror = ()=>ok([]); }); },
+  countW(){ return new Promise(ok=>{ const q = this.db.transaction('w').objectStore('w').count(); q.onsuccess = ()=>ok(q.result); q.onerror = ()=>ok(0); }); },
   countD(){ return new Promise(ok=>{ const q = this.db.transaction('d').objectStore('d').count(); q.onsuccess = ()=>ok(q.result); q.onerror = ()=>ok(0); }); }
 };
 const esc = x => x.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
@@ -385,13 +436,14 @@ async function kbImport(text){
 }
 const kbExport = () => [...nodes.values()].map(n=>JSON.stringify({path:pathOf(n),words:n.words,replies:n.replies})).join('\n');
 async function kbStats(){
-  let d = 0; try{ d = await DB.countD(); }catch(e){}
-  $('#kstats').textContent = nodes.size.toLocaleString()+' categories, '+d.toLocaleString()+' dictionary words, '+imgs.length.toLocaleString()+' taught images. Phrase patterns cover about '+patSpace().toLocaleString()+' phrases. Built-in families answer any number, date, word, unit, time zone or colour you give them.';
+  let d = 0, w = 0; try{ d = await DB.countD(); w = await DB.countW(); }catch(e){}
+  $('#kstats').textContent = nodes.size.toLocaleString()+' categories, '+d.toLocaleString()+' dictionary words, '+w.toLocaleString()+' saved articles and facts, '+imgs.length.toLocaleString()+' taught images. Phrase patterns cover about '+patSpace().toLocaleString()+' phrases. Built-in families answer any number, date, word, unit, time zone or colour you give them.';
 }
 async function kbInit(){
   await DB.open();
   const all = await DB.all(); all.forEach(setNode);
   all.forEach(n=>n.imgs.forEach(m=>imgs.push({id:n.id,...m})));
+  try{ (await DB.allI()).forEach(r=>imgs.push({id:r.c,k:r.k,q:r.q,s:r.s})); }catch(e){}
   if(!nodes.size){
     const d = new Set();
     kbAdd('greeting',['hi','hello','hey','howdy'],['Hello! What can I help you with?','Hi there! What can I help with?','Hey! What can I help you with today?'],d);
@@ -401,6 +453,11 @@ async function kbInit(){
   if(store.get('pack',0)<1){ await loadPack(); store.set('pack',1); }
   if(store.get('dict',0)<1){ await loadSampleDict(); store.set('dict',1); }
   if(store.get('pack2',0)<1){ await loadPackText(PACK2); store.set('pack2',1); }
+  if(store.get('facts1',0)<1){ await loadFacts(); store.set('facts1',1); }
+  if(store.get('facts2',0)<1){ await loadFactsText(FACTS2); store.set('facts2',1); }
+  if(store.get('pack3',0)<1){ await loadPackText(PACK3); store.set('pack3',1); }
+  if(store.get('facts3',0)<1){ await loadFactsText(FACTS3); store.set('facts3',1); }
+  try{ (await DB.allW()).forEach(aIndex); }catch(e){}
   kbStats();
 }
 /* images: MobileNet features, with a tiny pixel fallback */
@@ -426,13 +483,27 @@ async function embed(src){
   for(let i=0;i<d.length;i+=4) v.push(d[i]-128,d[i+1]-128,d[i+2]-128);
   return {k:'p',v:unit(v)};
 }
-async function recognize(src){
-  if(!imgs.length) return {text:'I have no taught images yet. Open Knowledge base, pick a category and add some photos.',actions:[]};
+const loadImg = src => new Promise((ok,no)=>{ const i = new Image(); i.onload = ()=>ok(i); i.onerror = no; i.src = src; });
+async function ocr(src){
+  if(!window.Tesseract) await loadJs('https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js');
+  const r = await Tesseract.recognize(src,'eng'); return (r.data.text||'').trim();
+}
+async function recognize(src,q){
+  if(/\b(read|ocr|extract|transcribe|text|says?|words?|written)\b/i.test(q||'')){
+    try{ const t = await ocr(src); return {text: t ? 'Here’s the text I can read:\n\n'+t.slice(0,3000) : 'I couldn’t find any readable text in that image.', actions:[{msg:'Word recognition (OCR)'}]}; }
+    catch(e){ return {text:'I couldn’t load the word-recognition tool. Check your internet connection and try again.', actions:[]}; }
+  }
   const e = await embed(src); let best = null, bs = -1;
-  for(const m of imgs){ if(m.k!==e.k) continue; let d = 0; for(let i=0;i<e.v.length;i++) d += e.v[i]*m.v[i]; if(d>bs){ bs = d; best = m; } }
-  if(!best || bs<(e.k==='m'?0.6:0.9)) return {text:'I do not recognise this yet. You can teach me in the Knowledge base.',actions:[]};
-  const n = nodes.get(best.id);
-  return {text: pick(n) || 'That looks like '+n.name+'.', actions:[{msg:pathOf(n)+' ('+Math.round(bs*100)+'% match)'}]};
+  for(const m of imgs){ if(m.k!==e.k) continue; const mv = m.q || m.v; let d = 0; for(let i=0;i<e.v.length;i++) d += e.v[i]*mv[i]; if(m.q) d *= m.s; if(d>bs){ bs = d; best = m; } }
+  if(best && bs>=(e.k==='m'?0.6:0.9)){ const n = nodes.get(best.id); return {text: pick(n) || 'That looks like '+n.name+'.', actions:[{msg:pathOf(n)+' ('+Math.round(bs*100)+'% match)'}]}; }
+  if(e.k==='m' && mnet){
+    try{
+      const top = (await mnet.classify(await loadImg(src),3)).filter(x=>x.probability>=0.05);
+      if(top.length && top[0].probability>=0.2) return {text:'This looks like '+top.map(x=>x.className.split(',')[0]+' ('+Math.round(x.probability*100)+'%)').join(', ')+'.', actions:[{msg:'Recognised from 1,000 everyday categories'}]};
+    }catch(err){}
+    return {text:'I’m not sure what this is. If you teach me with a few photos in the Knowledge base, I’ll recognise it next time.', actions:[]};
+  }
+  return {text: imgs.length ? 'I do not recognise this yet. You can teach me in the Knowledge base.' : 'I have no taught images yet, and the general image model could not load. Open Knowledge base to add some photos.', actions:[]};
 }
 const readUrl = f => new Promise(ok=>{ const r = new FileReader(); r.onload = ()=>ok(r.result); r.readAsDataURL(f); });
 function drawPrev(){
@@ -514,11 +585,43 @@ function virt(t){
   if((m = q.match(/^how many sides (?:does|has) an? (\p{L}+)(?: have)?$/u)) && SIDES[m[1]]) return ans('geometry > polygons','A '+m[1]+' has '+SIDES[m[1]]+' sides.');
   if((m = q.match(/^(?:tell me about |facts about )?(?:the planet )?(mercury|venus|earth|mars|jupiter|saturn|uranus|neptune)$/))) return ans('space > planets', cap(m[1])+': '+PLANETS[m[1]]);
   if((m = q.match(/^(?:atomic number of|element|symbol (?:for|of)|what element is) (\p{L}+)$/u))){ const e = ELEMS.find(x=>x[1].toLowerCase()===m[1] || x[0].toLowerCase()===m[1]); if(e) return ans('science > elements', e[1]+' ('+e[0]+') has atomic number '+e[2]+'.'); }
+  if((m = q.match(/^compound interest (?:on|of) \$?([\d,.]+) at ([\d.]+)%? (?:for|over) (\d+) years?(?: compounded (monthly|quarterly|daily|yearly|annually))?$/))){ const P = num(m[1]), r = +m[2]/100, y = +m[3], n = {monthly:12,quarterly:4,daily:365}[m[4]] || 1, A = P*Math.pow(1+r/n,n*y); return ans('finance > compound interest', usd(P)+' at '+m[2]+'% for '+y+' years'+(m[4]?', compounded '+m[4]:'')+', grows to about '+usd(A)+' (interest of '+usd(A-P)+').'); }
+  if((m = q.match(/^(?:the )?(?:monthly )?(?:payment|repayment)s? (?:on|for) (?:a )?\$?([\d,.]+)(?: loan| mortgage)? at ([\d.]+)%? (?:for|over) (\d+) years?$/))){ const P = num(m[1]), r = +m[2]/1200, n = +m[3]*12, M = r ? P*r/(1-Math.pow(1+r,-n)) : P/n; return ans('finance > loans','Monthly payment: about '+usd(M)+'. Total paid: '+usd(M*n)+', of which '+usd(M*n-P)+' is interest.'); }
+  if((m = q.match(/^bmi (?:for|of) ([\d.]+) ?kg (?:and )?([\d.]+) ?cm$/))){ const b = +m[1]/Math.pow(+m[2]/100,2); return ans('health > bmi','BMI is '+b.toFixed(1)+', which falls in the '+(b<18.5?'underweight':b<25?'healthy':b<30?'overweight':'obese')+' range. BMI is only a rough screening measure and doesn’t account for muscle, age or body type.'); }
+  if((m = q.match(/^([\d.]+)%? tip on \$?([\d,.]+)$/))){ const p = +m[1], a = num(m[2]); return ans('finance > tips', usd(a*p/100)+' tip on '+usd(a)+' at '+p+'%, for a total of '+usd(a*(1+p/100))+'.'); }
+  if((m = q.match(/^tip (?:on|for) \$?([\d,.]+) at ([\d.]+)%?$/))){ const p = +m[2], a = num(m[1]); return ans('finance > tips', usd(a*p/100)+' tip on '+usd(a)+' at '+p+'%, for a total of '+usd(a*(1+p/100))+'.'); }
+  if((m = q.match(/^split \$?([\d,.]+) (?:between|among|by) (\d+)(?: people)?$/)) && +m[2]>0) return ans('finance > splitting', usd(num(m[1])/+m[2])+' each.');
+  if((m = q.match(/^percent(?:age)? (?:change|increase|decrease) from ([\d,.]+) to ([\d,.]+)$/)) && num(m[1])!==0){ const a = num(m[1]), b = num(m[2]), c = (b-a)/a*100; return ans('math > percentages', fmt(a)+' to '+fmt(b)+' is a '+fmt(Math.abs(c))+'% '+(c>=0?'increase':'decrease')+'.'); }
+  if((m = q.match(/^what percent(?:age)? is ([\d,.]+) of ([\d,.]+)$/)) && num(m[2])!==0) return ans('math > percentages', fmt(num(m[1]))+' is '+fmt(num(m[1])/num(m[2])*100)+'% of '+fmt(num(m[2]))+'.');
+  if((m = q.match(/^(mean|average|median|mode|range|sum|total|standard deviation|variance) of ((?:-?\d+(?:\.\d+)?(?:\s*,\s*(?:and\s+)?|\s+and\s+|\s+))+-?\d+(?:\.\d+)?)$/))){
+    const xs = m[2].match(/-?\d+(?:\.\d+)?/g).map(Number), n = xs.length, sum = xs.reduce((a,b)=>a+b,0), mean = sum/n, sd = [...xs].sort((a,b)=>a-b);
+    const med = n%2 ? sd[(n-1)/2] : (sd[n/2-1]+sd[n/2])/2, cnt = {}; xs.forEach(x=>cnt[x] = (cnt[x]||0)+1);
+    const top = Math.max(...Object.values(cnt)), modes = Object.keys(cnt).filter(k=>cnt[k]===top), vp = xs.reduce((a,x)=>a+(x-mean)**2,0)/n;
+    const k = m[1], r = k==='mean'||k==='average' ? 'The mean is '+fmt(mean) : k==='median' ? 'The median is '+fmt(med) : k==='mode' ? (top===1 ? 'No value repeats, so there is no mode' : 'The mode is '+modes.join(', ')) : k==='range' ? 'The range is '+fmt(sd[n-1]-sd[0]) : k==='sum'||k==='total' ? 'The sum is '+fmt(sum) : k==='variance' ? 'The population variance is '+fmt(vp) : 'The population standard deviation is '+fmt(Math.sqrt(vp))+(n>1 ? ' (sample: '+fmt(Math.sqrt(vp*n/(n-1)))+')' : '');
+    return ans('math > statistics', r+'.');
+  }
+  if((m = q.match(/^(area|circumference) of (?:a )?circle(?: with)?(?: a)? radius(?: of)? ([\d.]+)$/))){ const r = +m[2]; return ans('geometry > circles','The '+m[1]+' of a circle with radius '+fmt(r)+' is '+fmt(m[1]==='area' ? Math.PI*r*r : 2*Math.PI*r)+'.'); }
+  if((m = q.match(/^(area|perimeter) of (?:a )?(rectangle|square)(?: with)?(?: sides?)?(?: of)? ([\d.]+)(?:\s*(?:and|by|x|×|,)\s*([\d.]+))?$/))){ const a = +m[3], b = m[4] ? +m[4] : a; return ans('geometry > rectangles','The '+m[1]+' of that '+m[2]+' is '+fmt(m[1]==='area' ? a*b : 2*(a+b))+'.'); }
+  if((m = q.match(/^area of (?:a )?triangle(?: with)? base(?: of)? ([\d.]+) (?:and )?height(?: of)? ([\d.]+)$/))) return ans('geometry > triangles','The area is '+fmt(+m[1]*+m[2]/2)+'.');
+  if((m = q.match(/^(volume|surface area) of (?:a )?sphere(?: with)?(?: a)? radius(?: of)? ([\d.]+)$/))){ const r = +m[2]; return ans('geometry > spheres','The '+m[1]+' of a sphere with radius '+fmt(r)+' is '+fmt(m[1]==='volume' ? 4/3*Math.PI*r**3 : 4*Math.PI*r*r)+'.'); }
+  if((m = q.match(/^hypotenuse (?:of|for) (?:a )?(?:right )?(?:triangle )?(?:with )?(?:sides? )?(?:of )?([\d.]+)(?: and |, ?)([\d.]+)$/))) return ans('geometry > right triangles','The hypotenuse is '+fmt(Math.hypot(+m[1],+m[2]))+'.');
+  if((m = q.match(/^solve\s+(-?\d*\.?\d*)\s*x\^2\s*([+-])\s*(\d*\.?\d*)\s*x\s*([+-])\s*(\d+\.?\d*)\s*=\s*0$/))){
+    const a = m[1]==='' ? 1 : m[1]==='-' ? -1 : +m[1], b = (m[2]==='-'?-1:1)*(m[3]===''?1:+m[3]), c = (m[4]==='-'?-1:1)*+m[5], d = b*b-4*a*c;
+    if(a!==0) return ans('math > equations', d<0 ? 'No real solutions (the discriminant is '+fmt(d)+').' : d===0 ? 'x = '+fmt(-b/(2*a)) : 'x = '+fmt((-b+Math.sqrt(d))/(2*a))+' or x = '+fmt((-b-Math.sqrt(d))/(2*a)));
+  }
+  if((m = q.match(/^how long (?:to|does it take to) (?:travel|drive|walk|run|cycle|fly) ([\d.]+) ?(km|kilometres|kilometers|miles?|mi) at ([\d.]+) ?(km\/?h|kph|mph|miles per hour|km per hour)$/)) && +m[3]>0){ const h = +m[1]*(/^mi/.test(m[2])?1.609344:1)/(+m[3]*(/mph|miles/.test(m[4])?1.609344:1)), hh = Math.floor(h), mm = Math.round((h-hh)*60); return ans('travel > time','About '+(hh ? hh+' h ' : '')+mm+' min.'); }
+  if((m = q.match(/^(?:binary|bin) ([01]+)(?: to| in) decimal$|^([01]+) in binary to decimal$/))){ const b = m[1]||m[2]; return ans('math > bases', b+' in binary is '+parseInt(b,2)+' in decimal.'); }
+  if((m = q.match(/^(?:hex|hexadecimal|0x) ?([0-9a-f]+)(?: to| in) decimal$|^([0-9a-f]+) in hex to decimal$/))){ const h = m[1]||m[2]; return ans('math > bases', h.toUpperCase()+' in hex is '+parseInt(h,16)+' in decimal.'); }
+  if((m = q.match(/^is (\d{1,4}) a leap year$/))){ const y = +m[1]; return ans('calendar > leap years', y+(y%4===0 && (y%100!==0 || y%400===0) ? ' is' : ' is not')+' a leap year.'); }
+  if((m = q.match(/^how many days (?:are )?in (january|february|march|april|may|june|july|august|september|october|november|december)(?: (\d{4}))?$/))){ const mi = MONTHS.indexOf(m[1]); if(mi===1 && !m[2]) return ans('calendar > months','February has 28 days, or 29 in a leap year.'); const y = m[2] ? +m[2] : 2001; return ans('calendar > months', cap(m[1])+(m[2]?' '+m[2]:'')+' has '+new Date(Date.UTC(y,mi+1,0)).getUTCDate()+' days.'); }
+  if((m = q.match(/^(?:the )?currency (?:of|in|used in) ([a-z .]+)$|^what currency (?:does|is used in) ([a-z .]+?)(?: use)?$/)) && INFO[cname(m[1]||m[2])]){ const k = cname(m[1]||m[2]); return ans('geography > currencies','The currency of '+thename(k)+' is the '+INFO[k][0]+'.'); }
+  if((m = q.match(/^(?:the )?(?:main |official )?languages? (?:of|in|spoken in) ([a-z .]+)$|^what languages? (?:do they speak|is spoken|are spoken|do people speak) in ([a-z .]+)$/)) && INFO[cname(m[1]||m[2])]){ const k = cname(m[1]||m[2]), many = / and |,/.test(INFO[k][1]); return ans('geography > languages','The main language'+(many?'s':'')+' of '+thename(k)+(many?' are ':' is ')+INFO[k][1]+'.'); }
+  if((m = q.match(/^(?:country profile|quick facts|facts) (?:of|about|on|for) ([a-z .]+)$/)) && INFO[cname(m[1])]){ const k = cname(m[1]); return ans('geography > country profile', titleCase(k)+': capital '+(CAP[k]||'not listed')+'; currency, the '+INFO[k][0]+'; language: '+INFO[k][1]+'.'); }
   if(/^what do you (?:know|remember) about me$|^what do you remember$|^show (?:my )?memory$/.test(q)) return ans('memory > recall', facts.length ? 'Here’s what you’ve told me:\n- '+facts.join('\n- ') : 'You haven’t told me anything to remember yet. Try “remember that my name is Sam”.');
   if((m = /^(?:what(?:'s| is)|who(?:'s| is)|where(?:'s| is))\s+my\s+(.+?)[?!. ]*$/i.exec(t.trim())) && facts.length){ const k = tok(m[1]).filter(x=>!STOP.has(x)), f = facts.find(x=>k.length && k.every(y=>tok(x).includes(y))); if(f) return ans('memory > recall','You told me: '+f+(/[.!?]$/.test(f)?'':'.')); }
   if(/^(?:the )?time$|^what time is it$|^current time$/.test(q)) return ans('time > clock','It’s '+new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'})+'.');
   if(/^(?:today's date|the date|what day is it|date today)$/.test(q)) return ans('time > date','Today is '+new Date().toLocaleDateString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric'})+'.');
-  if((m = q.match(/^(?:the )?capital (?:city )?of (?:the )?([a-z ]+)$/))){ const k = ALIAS[m[1].trim()] || m[1].trim(); if(CAP[k]) return ans('geography > capitals','The capital of '+k.replace(/\b\w/g,c=>c.toUpperCase())+' is '+CAP[k]+'.'); }
+  if((m = q.match(/^(?:the )?capital (?:city )?of (?:the )?([a-z ]+)$/))){ const k = ALIAS[m[1].trim()] || m[1].trim(); if(CAP[k]) return ans('geography > capitals','The capital of '+thename(k)+' is '+CAP[k]+'.'); }
   if((m = t.trim().match(/^reverse (.+)$/i))) return ans('words > reverse',[...m[1]].reverse().join(''));
   if((m = q.match(/^how many letters (?:are )?in (\p{L}+)$/u))) return ans('words > counting',m[1]+' has '+[...m[1]].length+' letters.');
   if((m = q.match(/^is (\p{L}+) a palindrome$/u))){ const w = [...m[1]]; return ans('words > palindromes', m[1]+(w.join('')===w.reverse().join('')?' is':' is not')+' a palindrome.'); }
@@ -828,6 +931,7 @@ const fixTok = x => (index.has(x) || x.length<4 || STOP.has(x)) ? x : (fuzz(x) |
 const wcache = new Map();
 async function wiki(q){
   q = q.trim().replace(/[?!.]+$/,''); if(!q) return null;
+  const loc = await wikiLocal(q); if(loc) return loc;
   if(wcache.has(q)) return wcache.get(q);
   let out = null;
   try{
@@ -842,28 +946,41 @@ async function wiki(q){
       }
     }
   }catch(e){}
+  if(out){ try{ await DB.putW([{k:wkey(q),t:out.title,x:out.text,u:out.link},{k:wkey(out.title),t:out.title,x:out.text,u:out.link}]); }catch(e){} aIndex({k:wkey(out.title),t:out.title,x:out.text,u:out.link}); }
   wcache.set(q,out); return out;
 }
-const WQ = [/^(?:who|what) (?:is|was|are|were) (?:an? |the )?(.+)$/,/^tell me (?:more )?about (?:the )?(.+)$/,/^(?:explain|describe) (?:the )?(.+)$/,/^(?:when|where) (?:was|is|were|did) (.+)$/,/^how (?:does|do) (.+) work$/];
+const WQ = [/^(?:who|what) (?:is|was|are|were) (?:an? |the )?(.+)$/,/^tell me (?:more )?about (?:the )?(.+)$/,/^(?:explain|describe) (?:the )?(.+)$/,/^(?:when|where) (?:was|is|were|did) (.+)$/,/^how (?:does|do) (.+) work$/,/^(?:history|facts|information|info) (?:of|about|on) (?:the )?(.+)$/,/^who (?:invented|discovered|wrote|painted|founded|built|created) (?:the )?(.+)$/];
 const topicOf = t => { const q = t.trim().replace(/[?!.]+$/,'').toLowerCase(); for(const re of WQ){ const m = q.match(re); if(m) return m[1]; } return content(tok(q)).join(' '); };
 const askish = t => /\?$|^(?:who|what|when|where|why|how|which|tell me|explain|describe)\b/i.test(t.trim());
 async function wikiAsk(text){
-  if(!WQ.some(re=>re.test(text.trim().replace(/[?!.]+$/,'').toLowerCase()))) return null;
-  const w = await wiki(topicOf(text)); if(!w) return null;
-  return {reply: w.text.split(/(?<=[.!?])\s+/).slice(0,2).join(' '), actions:[{msg:'Source: Wikipedia, '+w.title, url:w.link}]};
+  const bare = text.trim().replace(/[?!.]+$/,'').toLowerCase();
+  const w = WQ.some(re=>re.test(bare)) ? await wiki(topicOf(text)) : await wikiLocal(bare);
+  if(!w) return null;
+  return {reply: bestSentences(w.text,text,2), actions:[{msg: w.link ? 'Source: Wikipedia, '+w.title : 'Built-in knowledge: '+w.title, url:w.link||undefined}]};
 }
 function kbContext(text){
   const cq = [...new Set(content(tok(text)))], sc = new Map(), N = nodes.size+1;
   for(const x of cq){ const set = index.get(fixTok(x)); if(!set || set.size>2000) continue; const idf = Math.log(1+N/set.size); for(const id of set) sc.set(id,(sc.get(id)||0)+idf); }
   return [...sc].sort((a,b)=>b[1]-a[1]).slice(0,3).filter(e=>e[1]>2).map(([id])=>pick(nodes.get(id))).filter(Boolean);
 }
-async function gather(text){
+async function gather(text, webq){
   const parts = ['Today is '+new Date().toLocaleString()+'.']; let link = null, title = null;
   if(facts.length) parts.push('What the user has told you about themselves:\n- '+facts.join('\n- '));
   const kc = kbContext(text); if(kc.length) parts.push('Facts you were taught:\n- '+kc.join('\n- '));
-  if(askish(text)){
-    const w = await wiki(topicOf(text));
+  const loc = aSearch(text,3).filter(r=>r.v>=1.2); if(loc.length) parts.push('Saved knowledge:\n'+loc.map(r=>'- '+r.e.t+': '+r.e.x.slice(0,500)).join('\n'));
+  {
+    const w = askish(text) ? await wiki(topicOf(text)) : await wikiLocal(topicOf(text));
     if(w){ parts.push('Wikipedia article “'+w.title+'”: '+w.text.slice(0,1200)); link = w.link; title = w.title; }
+  }
+  const wantWeb = webq || (webCfg.key && askish(text)) || (!link && webCfg.auto && askish(text) && !kc.length && !loc.length);
+  if(wantWeb){
+    const r = await webSearch(webq || text.trim().replace(/[?!.]+$/,''));
+    if(r){
+      if(r.answer) parts.push('Web search answer: '+r.answer);
+      const lines = r.results.slice(0,4).map(x=>'- '+x.title+': '+x.text.slice(0,350));
+      if(lines.length) parts.push('Web search results:\n'+lines.join('\n'));
+      if(!link && r.results[0] && r.results[0].url){ link = r.results[0].url; title = r.results[0].title; }
+    }
   }
   return {text:'\n\nUse the information below when it helps. Prefer it over guessing. If it does not cover the question, say what you do know and admit uncertainty.\n'+parts.join('\n\n'), link, title};
 }
@@ -941,145 +1058,76 @@ facts/wonders => (what are|name|list) the seven wonders [of the world] => The Se
 `;
 async function loadPackText(txt){
   const d = new Set();
-  txt.trim().split('\n').forEach(l=>{ const [p,w,r] = l.split(' => '); kbAdd(p.trim(),w.split(';'),r.split('~'),d); });
+  txt.trim().split('\n').forEach(l=>{ const [p,w,r] = l.split(' => '); kbAdd(p.trim(),w.split(';'),r.split('~').map(x=>x.replace(/⏎/g,'\n')),d); });
   try{ await DB.put([...d]); }catch(e){}
 }
 
-/* ---------- chats ---------- */
-const getChat = () => chats.find(c=>c.id===cur);
-function newChat(){ const c = {id:String(Date.now()),title:'New chat',msgs:[]}; chats.unshift(c); cur = c.id; save(); drawAll(); }
-function save(){ store.set('chats',JSON.parse(JSON.stringify(chats.slice(0,40),(k,v)=>k==='img'?undefined:v))); store.set('cur',cur); }
-function drawChats(){
-  const el = $('#chats'); el.replaceChildren();
-  chats.forEach(c=>{
-    const d = document.createElement('div'); d.className = 'item'+(c.id===cur?' on':''); d.tabIndex = 0;
-    const t = document.createElement('span'); t.className='t'; t.textContent=c.title;
-    const x = document.createElement('button'); x.className='x'; x.setAttribute('aria-label','Delete chat');
-    x.innerHTML='<svg viewBox="0 0 24 24"><path d="M5 7h14M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>';
-    x.onclick = e=>{ e.stopPropagation(); chats = chats.filter(k=>k.id!==c.id); if(cur===c.id) cur = chats[0]?.id||null; if(!cur) newChat(); else { save(); drawAll(); } };
-    d.onclick = ()=>{ cur=c.id; save(); drawAll(); $('#side').classList.remove('show'); };
-    d.onkeydown = e=>{ if(e.key==='Enter') d.onclick(); };
-    d.append(t,x); el.append(d);
-  });
+/* ---------- Wikipedia learning: thousands of articles, saved for offline use ---------- */
+let learning = false;
+const wkey = t => t.toLowerCase();
+const wurl = t => 'https://en.wikipedia.org/wiki/'+encodeURIComponent(t.replace(/ /g,'_'));
+async function wikiLocal(q){
+  q = (q||'').trim().replace(/[?!.]+$/,'').toLowerCase(); if(!q) return null;
+  try{ const e = await DB.getW(q); return e ? {title:e.t, text:e.x, link:e.u} : null; }catch(err){ return null; }
 }
-function bubble(m){
-  const wrap = document.createElement('div');
-  const b = document.createElement('div'); b.className = m.role==='user'?'u':'a';
-  b.textContent = m.content; wrap.style.display='contents';
-  if(m.img){ const im = document.createElement('img'); im.src = m.img; im.className = 'thumb'; b.prepend(im); }
-  wrap.append(b);
-  if(m.actions?.length){
-    const cs = document.createElement('div'); cs.className='chips';
-    m.actions.forEach(a=>{
-      const c = document.createElement(a.url?'a':'span'); c.className='chip'+(a.bad?' bad':''); c.textContent = a.msg;
-      if(a.url){ c.href=a.url; c.target='_blank'; c.rel='noopener'; }
-      cs.append(c);
-    });
-    b.append(cs);
-  }
-  return {wrap,b};
+async function wikiStore(pages){
+  const rows = [];
+  for(const p of pages){ const x = (p.extract||'').trim(); if(x.length<40) continue; rows.push({k:wkey(p.title), t:p.title, x:x.slice(0,1500), u:wurl(p.title)}); }
+  if(rows.length){ await DB.putW(rows); rows.forEach(aIndex); }
+  return rows.length;
 }
-const SUGGEST = ['Open YouTube and search lo-fi beats','Set a 10 minute timer','Remind me to call mum','Explain how rainbows form'];
-function drawThread(){
-  const th = $('#thread'); th.replaceChildren();
-  const c = getChat(); $('#title').textContent = c && c.msgs.length ? c.title : 'Pocket Chat';
-  if(!c || !c.msgs.length){
-    const e = document.createElement('div'); e.id='empty';
-    e.innerHTML='<h1>What can I help with?</h1>'; const s = document.createElement('div'); s.className='sug';
-    SUGGEST.forEach(q=>{ const b=document.createElement('button'); b.textContent=q; b.onclick=()=>send(q); s.append(b); });
-    e.append(s); th.append(e); th.style.minHeight='100%'; th.style.justifyContent='center'; return;
-  }
-  th.style.minHeight=''; th.style.justifyContent='';
-  c.msgs.forEach(m=>th.append(bubble(m).wrap));
-  $('#scroll').scrollTop = 1e9;
+async function wikiBatch(extra){
+  const j = await (await fetch('https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=extracts&exintro=1&explaintext=1&exlimit=20&'+extra)).json();
+  const cont = j.continue ? Object.entries(j.continue).map(([k,v])=>k+'='+encodeURIComponent(v)).join('&') : '';
+  return {pages:Object.values((j.query&&j.query.pages)||{}), cont};
 }
-function drawAll(){ drawChats(); drawThread(); }
-
-async function send(text){
-  text = (text||'').trim(); if((!text && !pending) || busy) return;
-  if(!getChat()) newChat();
-  const c = getChat();
-  if(!c.msgs.length) c.title = text.slice(0,40) || 'Image';
-  const img = pending; pending = null; drawPrev(); c.msgs.push({role:'user',content:text,img:img&&img.url}); $('#in').value=''; resize(); busy = true; $('#send').disabled = true;
-  const reply = {role:'assistant',content:'',actions:[]}; c.msgs.push(reply); drawAll();
-  const last = $('#thread').lastElementChild.firstElementChild; last.classList.add('dots');
-  autoFact(text||''); const plan = text && ruleParse(text); const mu = (!plan && !img && text) ? multi(text) : null; const hit = (!plan && !img && !mu) ? (virt(text) || kbMatch(text)) : null; let streamed = false, dh = null, cx = null, wk = null;
+async function learnWiki(kind, arg, limit){
+  learning = true; let n = 0, cont = ''; const m = $('#kmsg');
   try{
-    if(plan){
-      reply.content = 'Done.'; reply.actions = runPlan(plan);
-    }else if(mu){
-      reply.content = mu.replies.join('\n') || 'Done.'; reply.actions = [...runPlan(mu.plan), ...mu.paths];
-    }else if(img){
-      const r = await recognize(img.url); reply.content = r.text; reply.actions = r.actions;
-    }else if(hit){
-      reply.content = hit.reply; reply.actions = [{msg:hit.path}];
-    }else if((dh = await dictAsk(text))){
-      reply.content = dh.reply; reply.actions = [{msg:dh.path}];
-    }else if(!engine && (wk = await wikiAsk(text))){
-      reply.content = wk.reply; reply.actions = wk.actions;
-    }else if(engine){
-      cx = await gather(text);
-      const history = c.msgs.slice(0,-1).slice(-8).map(m=>({role:m.role,content:m.role==='assistant'?m.content:m.content}));
-      const stream = await engine.chat.completions.create({messages:[{role:'system',content:systemFor(text)+cx.text},...history],temperature:0.3,top_p:0.9,max_tokens:700,stream:true});
-      let raw = ''; streamed = true; last.classList.add('typing');
-      for await (const ch of stream){
-        raw += ch.choices[0]?.delta?.content||'';
-        last.classList.remove('dots'); last.textContent = strip(raw); $('#scroll').scrollTop = 1e9;
-      }
-      last.classList.remove('typing'); reply.content = strip(raw) || 'Done.';
-      const m = raw.match(/ACTION:\s*(\[[\s\S]*\])/);
-      if(m){ try{ reply.actions = runPlan(JSON.parse(m[1])); }catch(e){ reply.actions=[{msg:'Could not read the action',bad:true}]; } }
-    }else{
-      reply.content = 'I can run quick commands without the AI model, like “open youtube”, “set a 5 minute timer” or “remind me to buy milk”. To chat freely, choose Load AI model at the top right.';
+    while(learning && n<limit){
+      const q = kind==='cat'
+        ? 'generator=categorymembers&gcmtitle='+encodeURIComponent('Category:'+arg)+'&gcmnamespace=0&gcmlimit=20'+(cont?'&'+cont:'')
+        : 'generator=random&grnnamespace=0&grnlimit=20';
+      const r = await wikiBatch(q); n += await wikiStore(r.pages); cont = r.cont;
+      m.textContent = 'Learned '+n.toLocaleString()+' articles…';
+      if(kind==='cat' && (!cont || !r.pages.length)) break;
+      await sleep(300);
     }
-  }catch(e){ reply.content = 'Something went wrong: '+e.message; }
-  if(cx && cx.link) (reply.actions = reply.actions||[]).push({msg:'Source: Wikipedia, '+cx.title, url:cx.link});
-  if(!streamed){ last.classList.remove('dots'); await sleep(350); last.classList.add('typing'); await typeOut(last,reply.content); last.classList.remove('typing'); }
-  busy = false; save(); drawAll(); $('#send').disabled = !$('#in').value.trim();
+  }catch(e){ m.textContent = 'Stopped after '+n.toLocaleString()+' articles: '+(e.message||'network error'); learning = false; kbStats(); return n; }
+  learning = false;
+  m.textContent = n ? 'Learned '+n.toLocaleString()+' articles.' : 'Nothing found. Use the name after “Category:” on Wikipedia, or try a more specific category.';
+  kbStats(); return n;
 }
-
-/* ---------- composer ---------- */
-function resize(){ const i=$('#in'); i.style.height='auto'; i.style.height=Math.min(i.scrollHeight,200)+'px'; }
-$('#in').addEventListener('input',()=>{ resize(); $('#send').disabled = busy || !($('#in').value.trim() || pending); });
-$('#in').addEventListener('keydown',e=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); send($('#in').value); } });
-$('#send').onclick = ()=>send($('#in').value);
-$('#new').onclick = ()=>{ if(!getChat()||getChat().msgs.length) newChat(); $('#side').classList.remove('show'); $('#in').focus(); };
-$('#tog').onclick = ()=>{ const s=$('#side'); if(innerWidth<=760) s.classList.toggle('show'); else s.classList.toggle('hide'); };
-
-/* ---------- dialogs, lists, teaching ---------- */
-document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>b.closest('dialog').close());
-$('#openTools').onclick = ()=>$('#dTools').showModal();
-$('#openTeach').onclick = ()=>$('#dTeach').showModal();
-function list(el,arr,key,empty){
-  el.replaceChildren();
-  if(!arr.length){ const li=document.createElement('li'); li.className='mute'; li.textContent=empty; el.append(li); return; }
-  arr.forEach((v,i)=>{
-    const li=document.createElement('li'), s=document.createElement('span'), b=document.createElement('button');
-    s.textContent = typeof v==='string'?v:v.input; b.textContent='Remove';
-    b.onclick=()=>{ arr.splice(i,1); store.set(key,arr); drawLists(); };
-    li.append(s,b); el.append(li);
-  });
+async function learnTopics(list){
+  learning = true; let n = 0, i = 0;
+  for(const t of list){ if(!learning) break; $('#kmsg').textContent = 'Learning '+(++i)+' of '+list.length+'…'; if(await wiki(t)) n++; await sleep(250); }
+  learning = false; $('#kmsg').textContent = 'Learned '+n+' of '+list.length+' topics.'; kbStats();
 }
-function drawLists(){
-  list($('#todos'),todos,'todos','Nothing yet. Try “remind me to call mum”.');
-  list($('#notes'),notes,'notes','Nothing yet. Try “note: wifi code is on the fridge”.');
-  list($('#ex'),examples,'examples','No taught phrases yet.');
-}
-$('#teach').onclick = ()=>{
-  try{
-    const output = JSON.parse($('#tout').value), input = $('#tin').value.trim();
-    if(!input || !Array.isArray(output)) throw 0;
-    examples.push({input,output}); store.set('examples',examples); $('#tin').value=''; $('#tmsg').textContent='Saved.'; drawLists();
-  }catch(e){ $('#tmsg').textContent='Enter a phrase and a valid JSON list of actions.'; }
-};
-$('#export').onclick = async ()=>{
-  const t = examples.map(e=>JSON.stringify({messages:[{role:'user',content:e.input},{role:'assistant',content:'Okay.\nACTION: '+JSON.stringify(e.output)}]})).join('\n');
-  try{ await navigator.clipboard.writeText(t); $('#tmsg').textContent='Copied '+examples.length+' examples as JSONL.'; }catch(e){ $('#tmsg').textContent='The browser blocked the clipboard.'; }
-};
+['Chemical elements','Capitals in Europe','Capitals in Asia','Planets of the Solar System','Mathematical constants','Oceans'].forEach(c=>{
+  const b = document.createElement('button'); b.className = 'chip'; b.textContent = c; b.onclick = ()=>{ $('#wcat').value = c; $('#wlcat').click(); }; $('#wsug').append(b);
+});
+$('#wlcat').onclick = ()=>{ const c = $('#wcat').value.trim(); if(c && !learning) learnWiki('cat',c,2000); };
+$('#wlrnd').onclick = ()=>{ if(!learning) learnWiki('rnd','',200); };
+$('#wltop').onclick = ()=>{ const l = $('#wtopics').value.split('\n').map(x=>x.trim()).filter(Boolean).slice(0,300); if(l.length && !learning) learnTopics(l); };
+$('#wstop').onclick = ()=>{ learning = false; };
 
-try{ await kbInit(); }catch(e){}
-if(!getChat()) newChat();
-drawAll(); drawLists();
-</script>
-</body>
-</html>
+/* ---------- web search: free sources by default, full web search with an optional Tavily key ---------- */
+let webCfg = Object.assign({auto:true, key:''}, store.get('web', {}));
+const WEBQ = [/^(?:search|look up|find|google)\s+(?:the )?(?:web|internet|online)(?: for| about)?\s+(.+)$/i, /^(?:search|look up|find|google)\s+(.+?)\s+(?:on the web|online|on the internet)$/i, /^web search:?\s+(.+)$/i, /^(?:what(?:'s| is) the )?latest (?:news )?(?:on|about)\s+(.+)$/i, /^news (?:on|about)\s+(.+)$/i];
+const webExplicit = t => { const s = t.trim().replace(/[?!.]+$/,''); for(const re of WEBQ){ const m = s.match(re); if(m) return m[1].trim(); } return null; };
+const plain = s => { const t = String(s||'').replace(/<[^>]+>/g,''); try{ return new DOMParser().parseFromString(t,'text/html').body.textContent; }catch(e){ return t; } };
+const firstSentences = (x,n) => x.split(/(?<=[.!?])\s+/).slice(0,n).join(' ');
+async function wikiSummary(title){
+  try{ const r = await (await fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(title.replace(/ /g,'_')))).json(); return r.extract && r.type!=='disambiguation' ? r.extract : null; }catch(e){ return null; }
+}
+async function tavily(q){
+  const r = await fetch('https://api.tavily.com/search',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+webCfg.key},body:JSON.stringify({query:q,max_results:5,include_answer:true})});
+  if(!r.ok) throw new Error('Tavily '+r.status);
+  const j = await r.json();
+  return {source:'tavily', answer:j.answer||'', results:(j.results||[]).map(x=>({title:x.title,url:x.url,text:plain(x.content)}))};
+}
+async function freeSearch(q){
+  const topic = topicOf(q) || q;
+  const [d, w] = await Promise.all([
+    fetch('https://api.duckduckgo.com/?q='+encodeURIComponent(topic)+'&format=json&no_html=1&skip_disambig=1').then(r=>r.json()).catch(()=>null),
+    fetch('https://en.wikipedia.org/w/api.php?action=query&list=search&format=json&origin=*&srlimit=5&srprop=snippet&srsearch='+encodeURIComponent(topic)).then(r=>r.json
